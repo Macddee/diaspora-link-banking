@@ -2,8 +2,10 @@
 
 import db from '@/lib/prisma';
 import { auth, currentUser } from '@clerk/nextjs/server';
-import { Prisma } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
+
+// Derive transaction client type from the generated Prisma client without importing Prisma namespace
+type TxClient = Parameters<Parameters<typeof db.$transaction>[0]>[0];
 
 /**
  * Syncs Clerk User with Database.
@@ -82,7 +84,7 @@ export async function transferFunds(receiverEmail: string, amount: number) {
   if (!receiverAccount) return { success: false, message: 'Recipient has no active wallet.' };
 
   try {
-    await db.$transaction(async (tx: Prisma.TransactionClient) => {
+    await db.$transaction(async (tx: TxClient) => {
       // Deduct from sender, track monthlyOut
       await tx.account.update({
         where: { id: senderAccount.id },
@@ -282,7 +284,7 @@ export async function reverseTransaction(transactionId: string) {
   if (!senderAccount || !receiverAccount) return { success: false, message: 'Account not found' };
 
   try {
-    await db.$transaction(async (tx: Prisma.TransactionClient) => {
+    await db.$transaction(async (tx: TxClient) => {
       // Move funds back: decrement receiver, increment sender
       await tx.account.update({
         where: { id: receiverAccount.id },
