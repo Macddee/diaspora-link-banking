@@ -34,7 +34,7 @@ export default async function SupportPage() {
                     <div className="p-6 text-center text-slate-500 text-sm">You haven't submitted any tickets yet.</div>
                 ) : (
                     <div className="divide-y divide-slate-100">
-                        {tickets.map(t => (
+                        {tickets.map((t: typeof tickets[0]) => (
                             <div key={t.id} className="p-4 hover:bg-slate-50 transition-colors">
                                 <div className="flex justify-between items-start mb-1">
                                     <h4 className="font-medium text-slate-900 text-sm">{t.subject}</h4>

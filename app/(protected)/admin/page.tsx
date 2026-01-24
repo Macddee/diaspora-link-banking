@@ -69,7 +69,7 @@ export default async function AdminPage() {
 
             {/* Mobile cards */}
             <div className="md:hidden divide-y divide-slate-100">
-              {users.map(u => (
+              {users.map((u: { id: string; email: string; role: string; isFrozen: boolean; kycStatus: string; }) => (
                 <div key={u.id} className="p-4 space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="font-semibold text-slate-900 text-sm leading-tight">{u.email}</div>

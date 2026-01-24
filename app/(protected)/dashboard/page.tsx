@@ -70,7 +70,7 @@ export default async function DashboardPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {transactions.map(tx => {
+                    {transactions.map((tx: typeof transactions[0]) => {
                       const isReceived = tx.receiverId === user.id;
                       return (
                         <tr key={tx.id}>
@@ -90,7 +90,7 @@ export default async function DashboardPage() {
 
               {/* Mobile cards */}
               <div className="md:hidden divide-y divide-slate-100">
-                {transactions.map(tx => {
+                {transactions.map((tx: typeof transactions[0]) => {
                 const isReceived = tx.receiverId === user.id;
                 return (
                   <div key={tx.id} className="p-4 space-y-2">

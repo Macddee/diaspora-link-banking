@@ -112,7 +112,7 @@ export const AdminView: React.FC = () => {
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-slate-100">
-                                        {transactions.slice(0, 10).map(tx => (
+                                        {transactions.slice(0, 10).map((tx: Transaction) => (
                                             <tr key={tx.id}>
                                                 <td className="px-4 py-2 font-mono text-xs text-slate-400">{tx.id}</td>
                                                 <td className="px-4 py-2">{tx.senderEmail}</td>
@@ -126,7 +126,7 @@ export const AdminView: React.FC = () => {
 
                             {/* Mobile cards */}
                             <div className="md:hidden divide-y divide-slate-100">
-                                {transactions.slice(0, 10).map(tx => (
+                                {transactions.slice(0, 10).map((tx: Transaction) => (
                                     <div key={tx.id} className="p-4 space-y-1">
                                         <div className="flex items-center justify-between">
                                             <span className="text-sm font-medium text-slate-900 truncate max-w-[50%]">{tx.senderEmail}</span>
@@ -157,7 +157,7 @@ export const AdminView: React.FC = () => {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100">
-                                {users.map(u => (
+                                {users.map((u: User) => (
                                     <tr key={u.id} className="hover:bg-slate-50">
                                         <td className="px-6 py-4">
                                             <div>
@@ -211,7 +211,7 @@ export const AdminView: React.FC = () => {
 
                     {/* Mobile cards */}
                     <div className="md:hidden divide-y divide-slate-100">
-                        {users.map(u => (
+                        {users.map((u: User) => (
                             <div key={u.id} className="p-4 space-y-3">
                                 <div className="flex items-start justify-between">
                                     <div>
@@ -265,7 +265,7 @@ export const AdminView: React.FC = () => {
             {activeTab === 'tickets' && (
                 <div className="space-y-4">
                     {tickets.length === 0 && <p className="text-slate-500">No support tickets found.</p>}
-                    {tickets.map(t => (
+                    {tickets.map((t: SupportTicket) => (
                         <Card key={t.id} className="p-4">
                             <div className="flex justify-between items-start">
                                 <div>

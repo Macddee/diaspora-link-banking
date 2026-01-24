@@ -30,7 +30,7 @@ export default async function AdminTransactionsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {txs.map(t => (
+              {txs.map((t: typeof txs[0]) => (
                 <tr key={t.id}>
                   <td className="px-6 py-4">{t.senderEmail}</td>
                   <td className="px-6 py-4">{t.receiverEmail}</td>
@@ -47,7 +47,7 @@ export default async function AdminTransactionsPage() {
 
         {/* Mobile cards */}
         <div className="md:hidden divide-y divide-slate-100">
-          {txs.map(t => (
+          {txs.map((t: typeof txs[0]) => (
             <div key={t.id} className="p-4 space-y-2">
               <div className="flex items-center justify-between">
                 <div className="text-sm font-medium text-slate-900 truncate">{t.senderEmail}</div>

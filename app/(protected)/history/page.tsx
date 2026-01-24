@@ -16,7 +16,7 @@ export default async function HistoryPage() {
   });
 
   // Map to the Interface expected by component (flattening emails)
-  const formattedTransactions = transactions.map(tx => ({
+  const formattedTransactions = transactions.map((tx: typeof transactions[0]) => ({
     ...tx,
     senderEmail: tx.sender.email,
     receiverEmail: tx.receiver.email,
