@@ -11,7 +11,7 @@ interface ProfileViewProps {
 }
 
 export const ProfileView: React.FC<ProfileViewProps> = ({ user, onUserUpdate }) => {
-  const [name, setName] = useState(user.name);
+  const [name, setName] = useState(user.name ?? '');
   const [isLoading, setIsLoading] = useState(false);
   const [msg, setMsg] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 

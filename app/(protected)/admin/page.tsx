@@ -1,4 +1,3 @@
-
 import { getDbUser } from '@/app/actions';
 import db from '@/lib/prisma';
 import { redirect } from 'next/navigation';
@@ -51,7 +50,7 @@ export default async function AdminPage() {
                       </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                      {users.map(u => (
+                      {users.map((u: { id: string; email: string; role: string; isFrozen: boolean; kycStatus: string; }) => (
                           <tr key={u.id}>
                               <td className="px-6 py-4">{u.email}</td>
                               <td className="px-6 py-4">{u.role}</td>

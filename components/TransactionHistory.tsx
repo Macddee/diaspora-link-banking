@@ -1,9 +1,20 @@
 import React from 'react';
-import { Transaction } from '../types';
 import { Card, CardHeader } from './ui/Card';
 
+// Minimal shape needed for display; keeps component decoupled from Prisma types
+type TransactionHistoryItem = {
+  id: string;
+  amount: number;
+  senderId: string;
+  receiverId: string;
+  senderEmail?: string | null;
+  receiverEmail?: string | null;
+  status: string;
+  timestamp: Date;
+};
+
 interface TransactionHistoryProps {
-  transactions: Transaction[];
+  transactions: TransactionHistoryItem[];
   currentUserId: string;
 }
 

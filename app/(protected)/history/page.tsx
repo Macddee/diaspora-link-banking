@@ -20,6 +20,7 @@ export default async function HistoryPage() {
     ...tx,
     senderEmail: tx.sender.email,
     receiverEmail: tx.receiver.email,
+    timestamp: tx.createdAt,
   }));
 
   return (
