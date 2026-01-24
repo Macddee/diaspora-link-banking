@@ -2,6 +2,7 @@
 
 import db from '@/lib/prisma';
 import { auth, currentUser } from '@clerk/nextjs/server';
+import { Prisma } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 
 /**
@@ -81,7 +82,7 @@ export async function transferFunds(receiverEmail: string, amount: number) {
   if (!receiverAccount) return { success: false, message: 'Recipient has no active wallet.' };
 
   try {
-    await db.$transaction(async (tx) => {
+    await db.$transaction(async (tx: Prisma.TransactionClient) => {
       // Deduct from sender, track monthlyOut
       await tx.account.update({
         where: { id: senderAccount.id },
@@ -281,7 +282,7 @@ export async function reverseTransaction(transactionId: string) {
   if (!senderAccount || !receiverAccount) return { success: false, message: 'Account not found' };
 
   try {
-    await db.$transaction(async (tx) => {
+    await db.$transaction(async (tx: Prisma.TransactionClient) => {
       // Move funds back: decrement receiver, increment sender
       await tx.account.update({
         where: { id: receiverAccount.id },
