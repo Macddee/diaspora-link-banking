@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model User {
+  id               String          @id @default(cuid())
+  clerkId          String          @unique
+  email            String          @unique
+  name             String?
+  role             String          @default("user")
+  isFrozen         Boolean         @default(false)
+  kycStatus        String          @default("PENDING")
+  accounts         Account[]
+  sentTrans        Transaction[]   @relation("SentTransactions")
+  receivedTrans    Transaction[]   @relation("ReceivedTransactions")
+  tickets          SupportTicket[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+}
+
+model Account {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  balance   Float    @default(0.0)
+  monthlyIn Float    @default(0.0)
+  monthlyOut Float   @default(0.0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Transaction {
+  id         String   @id @default(cuid())
+  amount     Float
+  senderId   String
+  sender     User     @relation("SentTransactions", fields: [senderId], references: [id])
+  receiverId String
+  receiver   User     @relation("ReceivedTransactions", fields: [receiverId], references: [id])
+  status     String   @default("COMPLETED")
+  createdAt  DateTime @default(now())
+}
+
+model SupportTicket {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject   String
+  message   String
+  status    String   @default("OPEN")
+  createdAt DateTime @default(now())
+}
