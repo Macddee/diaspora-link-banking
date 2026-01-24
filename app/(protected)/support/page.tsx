@@ -1,7 +1,7 @@
 
 import { getDbUser } from '@/app/actions';
 import db from '@/lib/prisma';
-import { Card, CardHeader } from '@/components/ui/Card';
+import { Card } from '@/components/ui/Card';
 import { SupportForm } from '@/components/SupportForm';
 
 export default async function SupportPage() {
@@ -31,7 +31,7 @@ export default async function SupportPage() {
             </div>
             <div className="overflow-y-auto flex-1 p-0">
                 {tickets.length === 0 ? (
-                    <div className="p-6 text-center text-slate-500 text-sm">You haven't submitted any tickets yet.</div>
+                    <div className="p-6 text-center text-slate-500 text-sm">You haven&apos;t submitted any tickets yet.</div>
                 ) : (
                     <div className="divide-y divide-slate-100">
                         {tickets.map((t: typeof tickets[0]) => (

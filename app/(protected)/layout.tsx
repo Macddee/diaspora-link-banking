@@ -24,8 +24,9 @@ export default async function ProtectedLayout({
   // Admin transactions badge: recent transactions in the last 24h
   let adminTxCount = 0;
   if (user.role === 'admin') {
-    const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
-    adminTxCount = await db.transaction.count({ where: { createdAt: { gte: since } } });
+    const oneDayAgo = new Date();
+    oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+    adminTxCount = await db.transaction.count({ where: { createdAt: { gte: oneDayAgo } } });
   }
 
   return (

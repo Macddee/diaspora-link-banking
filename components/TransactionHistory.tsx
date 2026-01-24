@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardHeader } from './ui/Card';
+import { Card } from './ui/Card';
 
 // Minimal shape needed for display; keeps component decoupled from Prisma types
 type TransactionHistoryItem = {

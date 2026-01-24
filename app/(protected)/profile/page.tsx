@@ -26,7 +26,7 @@ export default function ProfilePage() {
       } else {
         setMsg({ type: 'error', text: 'Failed to update profile.' });
       }
-    } catch (err) {
+    } catch (_err) {
       setMsg({ type: 'error', text: 'An unexpected error occurred.' });
     } finally {
       setIsLoading(false);

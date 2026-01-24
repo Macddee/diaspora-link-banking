@@ -10,7 +10,7 @@ export default function ReverseButton({ transactionId }: { transactionId: string
     if (!confirm('Reverse this transaction? This will move funds back.')) return;
     setLoading(true);
     try {
-      const res = await reverseTransaction(transactionId);
+      await reverseTransaction(transactionId);
       // no-op: server action revalidates; optionally add local toast
     } finally {
       setLoading(false);

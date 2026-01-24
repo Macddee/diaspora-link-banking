@@ -34,7 +34,7 @@ export default function TransfersPage() {
         } else {
             setToast({ message: result.message, type: 'error' });
         }
-    } catch (e) {
+    } catch (_e) {
         setToast({ message: 'System error occurred', type: 'error' });
     } finally {
         setIsProcessing(false);

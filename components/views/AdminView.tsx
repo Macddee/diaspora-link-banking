@@ -17,41 +17,44 @@ export const AdminView: React.FC = () => {
   // Actions Loading State
   const [processingId, setProcessingId] = useState<string | null>(null);
 
-  const fetchData = async () => {
-    setIsLoading(true);
-    const s = await getSystemStats();
-    const u = await getAllUsers();
-    const t = await getAllTickets();
-    const tx = await getAllTransactions();
-    setStats(s);
-    setUsers(u as any);
-    setTickets(t as any);
-    setTransactions(tx as any);
-    setIsLoading(false);
-  };
-
   useEffect(() => {
+    let cancelled = false;
+    const fetchData = async () => {
+      setIsLoading(true);
+      const s = await getSystemStats();
+      const u = await getAllUsers();
+      const t = await getAllTickets();
+      const tx = await getAllTransactions();
+      if (!cancelled) {
+        setStats(s);
+        setUsers(u as User[]);
+        setTickets(t as SupportTicket[]);
+        setTransactions(tx as Transaction[]);
+        setIsLoading(false);
+      }
+    };
     fetchData();
+    return () => { cancelled = true; };
   }, []);
 
   const handleFreeze = async (userId: string) => {
     setProcessingId(userId);
     await toggleFreezeUser(userId);
-    setUsers(await getAllUsers() as any); // Refresh
+    setUsers(await getAllUsers() as User[]); // Refresh
     setProcessingId(null);
   };
 
   const handleVerify = async (userId: string) => {
     setProcessingId(userId);
     await verifyUserKyc(userId);
-    setUsers(await getAllUsers() as any); // Refresh
+    setUsers(await getAllUsers() as User[]); // Refresh
     setProcessingId(null);
   };
 
   const handleResolve = async (ticketId: string) => {
     setProcessingId(ticketId);
     await resolveTicket(ticketId);
-    setTickets(await getAllTickets() as any); // Refresh
+    setTickets(await getAllTickets() as SupportTicket[]); // Refresh
     setStats(await getSystemStats()); // Refresh count
     setProcessingId(null);
   };

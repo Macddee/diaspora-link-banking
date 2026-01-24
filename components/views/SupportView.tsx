@@ -19,7 +19,7 @@ export const SupportView: React.FC<SupportViewProps> = ({ userId }) => {
     // Load initial tickets
     const fetchTickets = async () => {
         const data = await getUserTickets(userId);
-        setTickets(data as any);
+        setTickets(data as SupportTicket[]);
     };
     fetchTickets();
   }, [userId]);
@@ -32,7 +32,7 @@ export const SupportView: React.FC<SupportViewProps> = ({ userId }) => {
     try {
         const result = await submitSupportTicket(subject, message);
         if (result.success && result.ticket) {
-            setTickets([result.ticket as any, ...tickets]);
+            setTickets([result.ticket as SupportTicket, ...tickets]);
             setSubject('');
             setMessage('');
         }
@@ -87,7 +87,7 @@ export const SupportView: React.FC<SupportViewProps> = ({ userId }) => {
             </div>
             <div className="overflow-y-auto flex-1 p-0">
                 {tickets.length === 0 ? (
-                    <div className="p-6 text-center text-slate-500 text-sm">You haven't submitted any tickets yet.</div>
+                    <div className="p-6 text-center text-slate-500 text-sm">You haven&apos;t submitted any tickets yet.</div>
                 ) : (
                     <div className="divide-y divide-slate-100">
                         {tickets.map((t: SupportTicket) => (

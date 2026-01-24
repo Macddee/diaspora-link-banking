@@ -23,12 +23,12 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ user, onUserUpdate }) 
     try {
       const result = await updateUserProfile(name);
       if (result.success && result.user) {
-        onUserUpdate(result.user as any);
+        onUserUpdate(result.user as User);
         setMsg({ type: 'success', text: 'Profile updated successfully.' });
       } else {
         setMsg({ type: 'error', text: 'Failed to update profile.' });
       }
-    } catch (err) {
+    } catch (_err) {
       setMsg({ type: 'error', text: 'An unexpected error occurred.' });
     } finally {
       setIsLoading(false);
