@@ -3,6 +3,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { SignOutButton } from '@clerk/nextjs';
 import clsx from 'clsx';
@@ -101,11 +102,13 @@ const Sidebar: React.FC<SidebarProps> = ({
     <aside className={clsx("fixed left-0 top-0 h-full w-64 bg-slate-900 text-white flex flex-col z-20", className)}>
       <div className="p-6 border-b border-slate-800">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
-            <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-          </div>
+          <Image 
+            src="/app-image.png" 
+            alt="DiasporaLink Logo" 
+            width={32} 
+            height={32} 
+            className="rounded-lg"
+          />
           <span className="text-xl font-bold tracking-tight">DiasporaLink</span>
         </div>
       </div>
