@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardHeader } from './ui/Card';
 import { Input } from './ui/Input';
 import { Button } from './ui/Button';
+import { calcTransferFee } from '@/lib/fees';
 
 interface TransferFormProps {
   onReview: (email: string, amount: number) => void;
@@ -12,6 +13,11 @@ export const TransferForm: React.FC<TransferFormProps> = ({ onReview, isLoading 
   const [email, setEmail] = useState('');
   const [amount, setAmount] = useState('');
   const [error, setError] = useState<string | null>(null);
+
+  const numAmount = parseFloat(amount);
+  const validAmount = !isNaN(numAmount) && numAmount > 0 ? numAmount : 0;
+  const fee = calcTransferFee(validAmount);
+  const total = Math.round((validAmount + fee) * 100) / 100;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,6 +75,23 @@ export const TransferForm: React.FC<TransferFormProps> = ({ onReview, isLoading 
             <span className="text-slate-400 font-bold">$</span>
           }
         />
+
+        {validAmount > 0 && (
+          <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm space-y-1">
+            <div className="flex justify-between text-slate-600">
+              <span>Amount</span>
+              <span>${validAmount.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between text-slate-600">
+              <span>Bank fee (2.5%)</span>
+              <span>${fee.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between font-semibold text-slate-900 border-t border-slate-200 pt-1 mt-1">
+              <span>Total debit</span>
+              <span>${total.toFixed(2)}</span>
+            </div>
+          </div>
+        )}
 
         {error && (
           <div className="p-3 rounded-lg text-sm bg-red-50 text-red-700 border border-red-200">

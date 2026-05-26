@@ -15,6 +15,7 @@ model User {
   role             String          @default("user")
   isFrozen         Boolean         @default(false)
   kycStatus        String          @default("PENDING")
+  pendingClaim     Boolean         @default(false)
   accounts         Account[]
   sentTrans        Transaction[]   @relation("SentTransactions")
   receivedTrans    Transaction[]   @relation("ReceivedTransactions")
@@ -24,25 +25,40 @@ model User {
 }
 
 model Account {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  balance   Float    @default(0.0)
-  monthlyIn Float    @default(0.0)
-  monthlyOut Float   @default(0.0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  balance     Float    @default(0.0)
+  heldBalance Float    @default(0.0)
+  monthlyIn   Float    @default(0.0)
+  monthlyOut  Float    @default(0.0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Transaction {
-  id         String   @id @default(cuid())
-  amount     Float
-  senderId   String
-  sender     User     @relation("SentTransactions", fields: [senderId], references: [id])
-  receiverId String
-  receiver   User     @relation("ReceivedTransactions", fields: [receiverId], references: [id])
-  status     String   @default("COMPLETED")
-  createdAt  DateTime @default(now())
+  id            String                    @id @default(cuid())
+  amount        Float
+  fee           Float                     @default(0.0)
+  senderId      String
+  sender        User                      @relation("SentTransactions", fields: [senderId], references: [id])
+  receiverId    String
+  receiver      User                      @relation("ReceivedTransactions", fields: [receiverId], references: [id])
+  status        String                    @default("COMPLETED")
+  createdAt     DateTime                  @default(now())
+  editRequests  TransactionEditRequest[]
+}
+
+model TransactionEditRequest {
+  id               String      @id @default(cuid())
+  transactionId    String
+  transaction      Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  newAmount        Float
+  newReceiverEmail String
+  reason           String?
+  status           String      @default("PENDING")
+  createdAt        DateTime    @default(now())
+  resolvedAt       DateTime?
 }
 
 model SupportTicket {

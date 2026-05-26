@@ -1,10 +1,12 @@
 import React from 'react';
 import { Card } from './ui/Card';
+import { EditTransactionButton } from './EditTransactionButton';
 
 // Minimal shape needed for display; keeps component decoupled from Prisma types
 type TransactionHistoryItem = {
   id: string;
   amount: number;
+  fee?: number;
   senderId: string;
   receiverId: string;
   senderEmail?: string | null;
@@ -41,18 +43,20 @@ export const TransactionHistory: React.FC<TransactionHistoryProps> = ({ transact
               <th className="px-6 py-3">Date</th>
               <th className="px-6 py-3">Status</th>
               <th className="px-6 py-3 text-right">Amount</th>
+              <th className="px-6 py-3 text-right">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
             {transactions.length === 0 ? (
                 <tr>
-                    <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
+                    <td colSpan={6} className="px-6 py-8 text-center text-slate-500">
                         No transactions found.
                     </td>
                 </tr>
             ) : transactions.map((tx) => {
               const isReceived = tx.receiverId === currentUserId;
               const counterparty = isReceived ? tx.senderEmail : tx.receiverEmail;
+              const canEdit = !isReceived && (tx.status === 'COMPLETED' || tx.status === 'PENDING_CLAIM');
 
               return (
                 <tr key={tx.id} className="hover:bg-slate-50/50 transition-colors">
@@ -81,14 +85,24 @@ export const TransactionHistory: React.FC<TransactionHistoryProps> = ({ transact
                     {formatDate(tx.timestamp)}
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      tx.status === 'COMPLETED' ? 'bg-emerald-100 text-emerald-800' : 'bg-yellow-100 text-yellow-800'
-                    }`}>
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusClass(tx.status)}`}>
                       {tx.status}
                     </span>
                   </td>
                   <td className={`px-6 py-4 text-right font-medium ${isReceived ? 'text-emerald-600' : 'text-slate-900'}`}>
                     {isReceived ? '+' : '-'}${tx.amount.toFixed(2)}
+                    {!isReceived && tx.fee ? (
+                      <div className="text-xs text-slate-400 font-normal">+${tx.fee.toFixed(2)} fee</div>
+                    ) : null}
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    {canEdit && counterparty ? (
+                      <EditTransactionButton
+                        transactionId={tx.id}
+                        originalAmount={tx.amount}
+                        originalReceiverEmail={counterparty}
+                      />
+                    ) : null}
                   </td>
                 </tr>
               );
@@ -104,6 +118,7 @@ export const TransactionHistory: React.FC<TransactionHistoryProps> = ({ transact
         ) : transactions.map((tx) => {
           const isReceived = tx.receiverId === currentUserId;
           const counterparty = isReceived ? tx.senderEmail : tx.receiverEmail;
+          const canEdit = !isReceived && (tx.status === 'COMPLETED' || tx.status === 'PENDING_CLAIM');
 
           return (
             <div key={tx.id} className="p-4 space-y-2">
@@ -122,9 +137,7 @@ export const TransactionHistory: React.FC<TransactionHistoryProps> = ({ transact
                   </div>
                   <span className="font-medium text-slate-900">{isReceived ? 'Received' : 'Sent'}</span>
                 </div>
-                <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                  tx.status === 'COMPLETED' ? 'bg-emerald-100 text-emerald-800' : 'bg-yellow-100 text-yellow-800'
-                }`}>
+                <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${statusClass(tx.status)}`}>
                   {tx.status}
                 </span>
               </div>
@@ -135,6 +148,18 @@ export const TransactionHistory: React.FC<TransactionHistoryProps> = ({ transact
                   {isReceived ? '+' : '-'}${tx.amount.toFixed(2)}
                 </span>
               </div>
+              {!isReceived && tx.fee ? (
+                <div className="text-xs text-slate-400">Bank fee: ${tx.fee.toFixed(2)}</div>
+              ) : null}
+              {canEdit && counterparty ? (
+                <div className="pt-1">
+                  <EditTransactionButton
+                    transactionId={tx.id}
+                    originalAmount={tx.amount}
+                    originalReceiverEmail={counterparty}
+                  />
+                </div>
+              ) : null}
             </div>
           );
         })}
@@ -142,3 +167,20 @@ export const TransactionHistory: React.FC<TransactionHistoryProps> = ({ transact
     </Card>
   );
 };
+
+function statusClass(status: string) {
+  switch (status) {
+    case 'COMPLETED':
+      return 'bg-emerald-100 text-emerald-800';
+    case 'PENDING_CLAIM':
+      return 'bg-amber-100 text-amber-800';
+    case 'PENDING_EDIT':
+      return 'bg-blue-100 text-blue-800';
+    case 'EDITED':
+      return 'bg-slate-200 text-slate-700';
+    case 'REVERSED':
+      return 'bg-red-100 text-red-800';
+    default:
+      return 'bg-yellow-100 text-yellow-800';
+  }
+}

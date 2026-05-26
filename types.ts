@@ -27,6 +27,7 @@ export type SupportTicket = {
 export type Transaction = {
   id: string;
   amount: number;
+  fee?: number;
   senderId: string;
   receiverId: string;
   status: string;

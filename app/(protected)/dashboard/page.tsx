@@ -9,7 +9,7 @@ export default async function DashboardPage() {
   const user = await getDbUser();
   if (!user) return null;
 
-  // Fetch fresh account data directly to ensure monthly fields are included
+  // Fetch fresh account data directly so monthly fields are alos ther
   const account = await db.account.findFirst({
     where: { userId: user.id },
   });
